@@ -15,6 +15,7 @@ console.log("1:", /abc/.test("abcde"));   // true
 console.log("2:", /abc/.test("abxde"));   // false
 
 
+
 // Sets of Characters:
 
 // Anything between the square brakets will be looked for.
@@ -57,6 +58,7 @@ console.log("7:", notBinary.test("1100100010100110")); // false
 console.log("8:", notBinary.test("1100100010200110"));  // true
 
 
+
 // Repeating Parts of a Pattern:
 
 // What if we want to match a whole number - a sequence of one or more digits?
@@ -84,13 +86,14 @@ console.log("14:", neighbor.test("neighbor"));  // true
 // {4} -> must occure exactly four times
 // {2,4} -> range: must occur at least twice, at most four times
 
-// New date and time patter:
+// New date and time pattern:
 let dateTime2 = /\d{1,2}-\d{1,2}-\d{4} \d{1,2}:\d{2}/;
 console.log("15:", dateTime2.test("1-30-2003 8:45"));  // true
 
 // Note: you can also specify open-ended ranges when using braces by omitting
 // the number after the comma.
 // {5,} -> means five or more times
+
 
 
 // Grouping Subexpressions:
@@ -102,6 +105,7 @@ let cartoonCrying = /boo+(hoo+)+/i;
 console.log("16:", cartoonCrying.test("Boohooooohoohoooo"));   // true
 
 // Note: the i at the end of the expression makes this regex case insensitive.
+
 
 
 // Matches and Groups:
@@ -137,6 +141,7 @@ console.log("21:", /(\d)+/.exec("123"));    // ["123", "3"]
 
 // Groups are useful for extracting parts of a string from the returned
 // object by simply wrapping parentheses around the desired patterns.
+
 
 
 // The Date Class:
@@ -179,7 +184,8 @@ function getDate(string) {
 console.log("27:", getDate("1-30-2003"));
 
 
-// Word and String Boundaries:
+
+// Boundaries and Look-ahead:
 
 // To enforce that a match must span the entire string, we can add the markers
 // ^ and $. The ^ matches the start of the input string, while the $ matches
@@ -207,6 +213,32 @@ console.log("29:", /\bcat\b/.test("concatenate"));  // false
 // enforces that the regex matches only when a certain condition holds
 // at the place where it appears in the pattern.
 
+// Look-ahead provide a pattern and will make the match fail if the input
+// doesn't match the pattern, but don't actually move the match position
+// forward. They are written between (?= and )
+console.log("30:", /a(?=e)/.exec("braeburn"));  // ["a"]
+console.log("31:", /a(?! )/.exec("a b"))    // null
+
+// The (?! ) expresses a negative look-ahead. Matches only if the pattern
+// in the parentheses doesn't match.
+
+
 
 // Choice Patterns:
 
+// Say we want to know whether a piece of text contains not only a number but a 
+// number followed by one of the words pig, cow, or chicken, or any of their 
+// plural forms.
+
+// The pipe character (|) denotes a choice between pattern to its left
+// and the pattern to it's right.
+let animalCount = /\d+ (pig|cow|chicken)s?/;
+console.log("32:", animalCount.test("15 pigs"));    // true
+console.log(animalCount.test("15 pugs"));   // false
+
+// Parenthesis can limit the part of the pattern to which the pipe
+// operator applies.
+
+
+
+//
