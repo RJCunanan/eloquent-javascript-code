@@ -59,6 +59,43 @@ console.log("8:", notBinary.test("1100100010200110"));  // true
 
 
 
+// International Characters:
+
+//  JS's regex are rather dumb about characters that do not appear in the
+// English language. For example, JS's "word character" regex is only one
+// of the 26 characters in the latin alphabet (uppercase or lowercase),
+// decimal digits, and, for some reason, the underscore character.
+
+// It is possible to use \p in a regex to match all characters to which
+// the Unicode standard assigns a given property. This lets us match things
+// like letters in a more cosmopolitan way.
+
+// However, du to compatibility with original language standards, these are
+// recognized only when you put a "u" character (for Unicode) after the regex.
+
+/*
+\p{L} -> Any letter
+\p{N} -> Any numeric character
+\p{P} -> Any punctuation character
+\P{L} -> Any nonletter (uppercase P inverts)
+\p{Script=Hangul} ->Any character from the given script (see Ch.5)
+*/
+
+// Using \w for text processing that may need to handle non-English text
+// or characters is a liability. Though more verbose, \p propert groups
+// are more robust.
+console.log("Int. Chars.:", /\p{L}/u.test("α"));    // true
+console.log("Int. Chars.:", /\p{L}/u.test("!"));    // false
+console.log("Int. Chars.:", /\p{Script=Greek}/u.test("α")); // true
+console.log("Int. Chars.:", /\p{Script=Arabic}/u.test("α"));    // false
+
+// On the other hand, if you are matching numbers to do something with
+// them, you want to use \d for digits, since converting converting
+// arbitrary numeric characters into a JS number is not something a function
+// like "Number" can do for you.
+
+
+
 // Repeating Parts of a Pattern:
 
 // What if we want to match a whole number - a sequence of one or more digits?
@@ -241,4 +278,26 @@ console.log(animalCount.test("15 pugs"));   // false
 
 
 
-//
+// The Replace Method:
+
+// String values have a replace() method to replace part of a string with
+// another string
+console.log("33:", "papa".replace("p", "m"));  // "mapa"
+
+// The 1st argument can be a regex where the first match of the regex gets replaced.
+// When a "g" option (for global) is added after the regex, ALL matches in the string
+// will be replaced.
+console.log("34:", "Borobudur".replace(/[ou]/, "a"));   // "Barobudur"
+console.log("35:", "Borobudur".replace(/[ou]/g, "a"));  // "Barabadar"
+
+// The real power of using regex with replace() comes from being able to refer to
+// matched groups in the replacement string.
+
+// Say we have a big string containing the names of people, one name per line,
+// in the format "Lastname, Firstname". If we want to swap these names and remove
+// the comma to get a "Firstname Lastname" format, we can do the following:
+console.log(
+    "36:",
+    "Liskov, Barbara\nMcCarthy, John\nMilner, Robin"
+        .replace(/(\p{L}+), (\p{L}+)/gu, "$2 $1")
+);
