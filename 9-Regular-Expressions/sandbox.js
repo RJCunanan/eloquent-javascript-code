@@ -23,3 +23,7 @@ console.log("10:", writtenDateRegEx.test("November , 1976"));
 console.log("11:", writtenDateRegEx.test("November 24, 197"));
 console.log("12:", writtenDateRegEx.test("November  24, 1976"));    // using tabs
 console.log("13:", writtenDateRegEx.test("November 244, 1976"));
+
+// Using Number():
+console.log("14:", typeof("1957"));
+console.log("15:", typeof(Number("1957")));

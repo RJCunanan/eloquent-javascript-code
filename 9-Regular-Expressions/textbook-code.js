@@ -301,3 +301,46 @@ console.log(
     "Liskov, Barbara\nMcCarthy, John\nMilner, Robin"
         .replace(/(\p{L}+), (\p{L}+)/gu, "$2 $1")
 );
+/*
+Barbara Liskov
+John McCarthy
+Robin Milner
+*/
+
+// The $1 and $2 in the replacement string refer to the parenthesized groups
+// in the pattern. $1 is replaced by the text that matched the first group,
+//  $2 by the second, and so on, up to $9. The whole match can be referred
+// to with $&.
+
+// It is possible to pass a function - rather than a string - as the second
+// argument to replace(). For each replacement, the function will be called
+// with the matched groups (as well as the whole match) as arguments, and
+// its return value will be inserted into the new string.
+
+// Example:
+let stock = "1 lemon, 2 cabbages, and 101 eggs";
+function minusOne(match, amount, unit) {
+    console.log("match:", match);
+    amount = Number(amount) - 1;
+    if (amount == 1) {  // only one left, remove the 's'
+        unit = unit.slice(0, unit.length - 1);
+    } else if (amount == 0) {
+        amount = "no";
+    }
+    return amount + " " + unit;
+}
+console.log("37:", stock.replace(/(\d+) (\p{L}+)/gu, minusOne));
+// no lemon, 1 cabbage, and 100 eggs
+
+// This code takes a string, finds all occurrencs of a number followed by an
+// alphanumeric word, and returns a string that has one less of every such
+// quantity.
+
+// The (\d+) group ends up as the "amount" argument to the function, and
+// the (\p{L}+) grup gets bound to "unit". The function converts "amount"
+// to a number - which always works since it matched \d+ earlier - and
+// makes some adjustments in case there is only one or zero left.
+
+
+
+// Greed:
