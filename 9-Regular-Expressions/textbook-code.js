@@ -344,3 +344,50 @@ console.log("37:", stock.replace(/(\d+) (\p{L}+)/gu, minusOne));
 
 
 // Greed:
+
+// We can use replace() to write a function that removes all comments
+// form a piece of JavaScript code. First attempt:
+function stripComments(code) {
+    return code.replace(/\/\/.*|\/\*[^]*\*\//g, "");
+}
+console.log("38:", stripComments("1 + /* 2 */3")); // 1 + 3
+console.log("39:", stripComments("x = 10;// ten!"));   // x = 10;
+console.log("40:", stripComments("1 /* a */+/* b */ 1"));  // 1  1
+
+// The part before the | operator matches two slash chars followed by
+// any number of non-newline chars. The part for multiline comments,
+// we use [^] (any char that is not in the empty set of chars) to match
+// any char. We can't just use a period here becouse block comments can
+// continue on a new line, and the period char does not match newline
+// chars.
+
+// But the output for the last line is wrong. Why?
+
+// The [^]* part of the expression will first match as much as it can.
+// In the example, the matcher first tries to match teh whole rest of
+// the string and moves back from there. It will find an occurrence of
+// */ after going back 4 chars and match that. This is not what we wanted.
+// We want to match a single comment, not go all the way to the end of
+// the code and find the end of the last block comment.
+
+// Because of this behavior, we say that repetiton operators (+, *, ?, and {})
+// are "greedy", meaning they match as much as they can and backtrack from there.
+// If you put a questionmark after them (+?, *?, ??, {}?), they become nongreedy
+// and start matching as little as possible, matching more only when the
+// remaining patter does not fit the smaller match.
+
+// By having the start match the smallest stretch of chars that brings us
+// to a */, we consume only one block comment and nothing more.
+function stripComments2(code) {
+    return code.replace(/\/\/.*|\/\*[^]*?\*\//g, "");
+}
+console.log("41:", stripComments2("1 /* a */+/* b */ 1"));  // 1 + 1
+
+// Lots of bugs in regex programs can be traced to unintentially using 
+// greedy operators where a nongreedy one would work better. When using
+// a repetition operator, prefer the nongreedy variant.
+
+
+
+// Dynamically Creating RegExp Objects:
+
