@@ -391,3 +391,33 @@ console.log("41:", stripComments2("1 /* a */+/* b */ 1"));  // 1 + 1
 
 // Dynamically Creating RegExp Objects:
 
+// In some cases you may not know the exact pattern you need to match
+// against when writing code. Say you want to test for the user's name
+// in a piece of text. You can build up a string and use the RegExp
+// constructor on that.
+let name = "harry";
+let regexp = new RegExp("(^|\\s)" + name + "($|\\s)", "gi");
+console.log("42:", regexp.test("Harry is a dodgy character."));    // true
+
+// When creating the \s part of the string, we have to use 2 backslashes
+// because we are writing them in a normal string instead of a slash-enclosed
+// regex. The second argument to the RegExp constructor contains the options
+// for the regex - in this case "gi" for global and case insensitive.
+
+// But what if the name is "dea+hl[]rd" because our user is a nerdy teen?
+// That would result in a nonsensical regex that won't actually match the
+// user's name.
+
+// To work around this, we can add backslashes before any character that
+// has a special meaning.
+let name2 = "dea+hl[]rd";
+let escaped = name2.replace(/[\\[.+*?(){|^$]/g, "\\$&");
+let regexp2 = new RegExp("(^|\\s)" + escaped + "($|\\s)", "gi");
+let text = "This dea+hl[]rd guy is super annoying.";
+console.log("43:", regexp2.test(text)); // true
+
+
+
+// The Search Method:
+
+//
