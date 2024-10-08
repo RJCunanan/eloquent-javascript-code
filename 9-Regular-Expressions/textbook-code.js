@@ -435,4 +435,77 @@ console.log("45:", "     ".search(/\S/));  // -1
 
 // The LastIndex Property:
 
+// The exec() method doesn't provide a convenient way to search from
+// a given position in a string, but it does provide an inconvenient
+// way.
+
+// RegExp objects have properties. One property is "source", which
+// contains the string that the expression was created from. Another
+// property is "lastIndex", which controls, in limited circumstances,
+// where the next match will start.
+
+// Those circumstances are that the regex must have the global (g)
+// or sticky (y) option enabled, and the match must happen through
+// the exec method.
+let pattern2 = /y/g;
+pattern2.lastIndex = 3;
+let match2 = pattern2.exec("xyzzy");
+console.log("46:", match2.index);    // 4
+console.log("47:", pattern2.lastIndex);  // 5
+
+// If the match was successful, the call to exec() automatically
+// updates the lastIndex property after the match. If no match was
+// found, lastIndex is set back to 0, just like a newly constructed
+// regexp object.
+
+// Difference betweend global and sticky options:
+// When sticky is enabled, the match will succeed only if it starts
+// directly at lastIndex, whereas with global, it will search ahead
+// for a position where a match can start.
+let global2 = /abc/g;
+console.log("48:", global2.exec("xyz abc"));    // ["abc"]
+
+let sticky = /abc/y;
+console.log("49:", sticky.exec("xyz abc"));     // null
+
+// When using a shared regex value for multiple exec() calls, these
+// automatic updates to the "lastIndex" property can cause problems.
+// Your regex might be accidentally starting at an index left over
+// from a previous call.
+let digit2 = /\d/g;
+console.log("50:", digit2.exec("here it is: 1"));    // ["1"]
+console.log("51:", digit2.exec("and now: 1"));  // null
+
+// Another interesting effect of the global option is that it changes
+// the way the match() method on strings works. When called with a
+// global expression, instead of returning an array similart to that
+// returned by exec(), match() will find ALL matches of the pattern
+// in the string and return an array containing the matched strings.
+console.log("52:", "Banana".match(/an/g));  // ["an", "an"]
+
+// Be cautious with global regex. The cases where they are necessary -
+// calls to replace() and places where you want to explicitly use
+// "lastIndex" - are typically the situations where you want to use
+// them.
+
+// A common thing to do is to find all the matches of a regex in a
+// string. We can do this by using the matchAll() method.
+
+// This method returns an array of match arrays. The regex given to
+// matchAll() MUST have "g" enabled.
+let input = "A string with 3 numbers in it... 42 and 88.";
+let matches = input.matchAll(/\d+/g);
+for (let match of matches) {
+    console.log("53:", "Found", match[0], "at", match.index);
+}
+/*
+Found 3 at 14
+Found 42 at 33
+Found 88 at 40
+*/
+
+
+
+// Parsing an INI File:
+
 //
