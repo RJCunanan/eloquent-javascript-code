@@ -508,4 +508,108 @@ Found 88 at 40
 
 // Parsing an INI File:
 
-//
+// Imagine we are writing a program to automatically collect info.
+// about our enemies from the internet. (We will not actually write
+// that program here, just the part that reads the configuration file.)
+// The configuration file looks like this:
+
+/*
+
+searchengine=https://duckduckgo.com/?q=$1
+spitefulness=9.7
+
+; comments are preceded by a smicolon...
+; each section concerns an individual enemy
+[larry]
+fullname=Larry Doe
+type=kindergarten bully
+website=http://www.geocities.com/CapeCanaveral/11451
+
+[davaeorn]
+fullname=Davaeorn
+type=evil wizard
+outputdir=/home/marijn/enemies/davaeorn
+
+*/
+
+// The exact rules for this format - which is a widely used file
+// format, usually called an INI file - are as follows:
+// - Blank lines and lines starting with semicolons are ignored.
+// - Lines wrapped in [ and ] start a new section.
+// - Lines containing an alphanumeric identifier followed by an
+//  "=" character add a setting to the current section.
+// - Anything else is invalid.
+
+// Our task is to convert a string like this into an object whose
+// properties hold strings for settings written before the first
+// section header and subobjects for sections, with those subobjects
+// holding the section's settings.
+
+// Since the format has to be processed line by line, splitting up
+// the file into separate lines is a good start. We saw the split()
+// method in ch. 4. Some operating systems, however, use not just
+// a newline character to separate lines but a carriage return character
+// followed by a newline ("\r\n"). Given that the split() method also
+// allows a regex as its argument, we can use a regular expression like
+// /\r?\n/ to split in a way that allows both "\n" and "\r\n" between
+// lines.
+
+function parseINI(string) {
+    // Start with an object to hold the top-level fields
+    let result = {};
+    let section = result;
+    for (let line of string.split(/\r?\n/)) {
+        let match;
+        if (match = line.match(/^(\w+)=(.*)$/)) {   // new setting
+            section[match[1]] = match[2];
+        } else if (match = line.match(/^\[(.*)\]$/)) {  // new section
+            section = result[match[1]] = {};
+        } else if (!/^\s*(;|$)/.test(line)) {   // invalid line
+            throw new Error("Line '" + line + "' is not valid.");
+        }
+    };
+    return result;
+  }
+
+console.log("54:", parseINI(`
+name=Vasilis
+[address]
+city=Tessaloniki`));
+// {name: "Vasilis", address: {city: "Tessaloniki"}}
+
+// The code goes over the file's lines and builds up an object.
+// Properties at the top are stored directly into that object,
+// whereas properties found in sections are stored in a separate
+// section object. The "section" binding points at the object for
+// the current section.
+
+// There are two kinds of significant lines - section headers or
+// property lines. When a line is a regular property, it is stored
+// in the current section. When it is a section header, a new section
+// object is created, and "section" is set to point at it.
+
+// Note the recurring use of "^" and "$" to make sure the expression
+// matches the whole line, not just part of it. Leaving these out
+// results in code that mostly works but behaves stragely for some
+// input, which can be a difficult bug to track down.
+
+// The pattern "if (match = string.match(...))" makes use of the fact
+// that the value of an assignment expression (=) is the assigned value.
+// You often aren't sure that your call to match() will succeed, so you
+// can access the resulting object only inside an "if" statement that
+// tests for this. To not break the pleasant chain of "else if" forms,
+// we assign the result of the match to a binding and immediately use
+// that assignment as the test for the "if" statement.
+
+// If a line is not a section header or a property, the function checks
+// whether it is a comment or an empty line using the expression
+// /^\s*(;|$)/ to match lines that either contain only whitespace, or
+// whitespace followed by a semicolon (making the rest of the line a
+// comment). When a line doesn't match any of the expected forms, the 
+// function throws an exception.
+
+
+
+// Code Units and Characters:
+
+// 
