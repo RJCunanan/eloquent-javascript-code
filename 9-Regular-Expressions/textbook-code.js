@@ -612,4 +612,24 @@ city=Tessaloniki`));
 
 // Code Units and Characters:
 
-// 
+// Another design mistake that's been standardized in JS regex is that
+// by default, operators like "." or "?" work on code units (as discussed
+// in Ch.5), not actual characters. This means characters that are composed
+// of two code units behave strangely.
+console.log("55:", /🍎{3}/.test("🍎🍎🍎")); // → false
+console.log("56:", /<.>/.test("<🌹>")); // → false
+console.log("57:", /<.>/u.test("<🌹>"));    // → true
+
+// The problem is that the 🍎 in the first line is treated as two code
+// units, and {3} is applied only to the second unit. Similarly, the dot
+// matches a single code unit, not the two that make up the rose emoji.
+
+// You must add the "u" (Unicode) option to your regex to make it treat
+// such characters propertly.
+console.log("58:", /🍎{3}/u.test("🍎🍎🍎"));    // → true
+
+
+
+// Summary:
+
+//
