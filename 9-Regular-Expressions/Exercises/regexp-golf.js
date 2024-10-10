@@ -23,31 +23,31 @@ Refer to the table in the chapter summary for help. Test each solution with a fe
 
 // Fill in the regular expressions
 
-verify(/.../,
+verify(/ca[r|t]/,
     ["my car", "bad cats"],
     ["camper", "high art"]);
 
-verify(/.../,
+verify(/pr?op/,
     ["pop culture", "mad props"],
     ["plop", "prrrop"]);
 
-verify(/.../,
+verify(/ferr[et|y|ari]/,
     ["ferret", "ferry", "ferrari"],
     ["ferrum", "transfer A"]);
 
-verify(/.../,
+verify(/[a-z]*ious\b/,
     ["how delicious", "spacious room"],
     ["ruinous", "consciousness"]);
 
-verify(/.../,
+verify(/\s[.|,|:|;]/,
     ["bad punctuation ."],
     ["escape the period"]);
 
-verify(/.../,
+verify(/[a-z]{6}/,
     ["Siebentausenddreihundertzweiundzwanzig"],
     ["no", "three small words"]);
 
-verify(/.../,
+verify(/\p{L}*[^e]\p{L}*/uig,
     ["red platypus", "wobbling nest"],
     ["earth bed", "bedrøvet abe", "BEET"]);
 
