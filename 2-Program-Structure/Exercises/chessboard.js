@@ -20,9 +20,8 @@ When you have a program that generates this pattern, define a binding size = 8 a
 
 // My simple solution:
 
-// Variable to hold chessboard string output
-let output = "";
-let bindingSize = 8;
+let output = "";    // Variable to hold chessboard string output
+let bindingSize = 8;    // Determins size of chessboard
 
 for (let row = 0; row < bindingSize; row++) {
     // Check if it is an even-numbered row
@@ -49,7 +48,7 @@ for (let row = 0; row < bindingSize; row++) {
         }
     }
 
-    // Start printing the next row
+    // Start the next row
     output += "\n";
 }
 
@@ -58,3 +57,28 @@ console.log(output);
 
 
 
+/******************************************************************/
+
+
+
+// My more optimized solution:
+
+let output2 = "";    // Variable to hold chessboard string output
+let bindingSize2 = 5;    // Determins size of chessboard
+
+for (let row = 0; row < bindingSize2; row++) {
+    for (let col = 0; col < bindingSize2; col++) {
+        if ((row + col) % 2 === 0) {
+            output2 += " ";
+        }
+        else {
+            output2 += "#";
+        }
+    }
+
+    // Start the next row
+    output2 += "\n";
+}
+
+// Print out the chessboard
+console.log(output2);
