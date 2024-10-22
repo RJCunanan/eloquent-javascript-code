@@ -31,3 +31,19 @@ for (let num = 1; num <= 100; num++) {
 
 
 // The clever solution:
+for (let num = 1; num <= 100; num++) {
+    let output = "";    // Holds the string output
+
+    // Check if num divisible by 3
+    if (num % 3 === 0) {
+        output += "Fizz";   // Concat "Fizz" to output variable
+    }
+
+    // Check if num divisible by 5
+    if (num % 5 === 0) {
+        output += "Buzz";   // Concat "Buzz" to output variable
+    }
+
+    // Print either the string output or the number
+    console.log(output || num);
+}
